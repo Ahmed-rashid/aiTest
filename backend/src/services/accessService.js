@@ -1,19 +1,13 @@
-import { z } from 'zod';
 import { store } from '../data/store.js';
 import { ApiError } from '../utils/errors.js';
-
-const authorizeSchema = z.object({
-  memberId: z.string().min(1),
-  gate: z.string().min(2)
-});
+import { requireObject, validate } from '../utils/validation.js';
 
 export function authorizeVisit(payload) {
-  const parsed = authorizeSchema.safeParse(payload);
-  if (!parsed.success) {
-    throw new ApiError(400, 'Invalid check-in payload', parsed.error.flatten());
-  }
+  const data = requireObject(payload, 'check-in payload');
+  const memberId = validate.nonEmptyString(data.memberId, 'memberId');
+  const gate = validate.nonEmptyString(data.gate, 'gate', 2);
 
-  const member = store.members.find((entry) => entry.id === parsed.data.memberId);
+  const member = store.members.find((entry) => entry.id === memberId);
 
   if (!member) {
     return {
@@ -39,7 +33,7 @@ export function authorizeVisit(payload) {
   const visit = {
     id: store.createId('visit'),
     memberId: member.id,
-    gate: parsed.data.gate,
+    gate,
     status: 'ALLOW',
     timestamp: new Date().toISOString()
   };
@@ -54,5 +48,8 @@ export function authorizeVisit(payload) {
 }
 
 export function listAccessFeed(limit = 10) {
+  if (!Number.isInteger(limit) || limit <= 0) {
+    throw new ApiError(400, 'Invalid limit');
+  }
   return store.visits.slice(0, limit);
 }

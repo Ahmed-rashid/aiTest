@@ -1,25 +1,12 @@
-import { z } from 'zod';
 import { store } from '../data/store.js';
 import { ApiError, assertFound } from '../utils/errors.js';
-
-const createInvoiceSchema = z.object({
-  memberId: z.string().min(1)
-});
-
-const webhookSchema = z.object({
-  providerEventId: z.string().min(4),
-  memberId: z.string().min(1),
-  status: z.enum(['succeeded', 'failed']),
-  amount: z.number().positive()
-});
+import { requireObject, validate } from '../utils/validation.js';
 
 export function createInvoice(payload) {
-  const parsed = createInvoiceSchema.safeParse(payload);
-  if (!parsed.success) {
-    throw new ApiError(400, 'Invalid invoice payload', parsed.error.flatten());
-  }
+  const data = requireObject(payload, 'invoice payload');
+  const memberId = validate.nonEmptyString(data.memberId, 'memberId');
 
-  const member = store.members.find((entry) => entry.id === parsed.data.memberId);
+  const member = store.members.find((entry) => entry.id === memberId);
   assertFound(member, 'Member not found');
 
   const plan = store.plans.find((entry) => entry.id === member.planId);
@@ -39,29 +26,30 @@ export function createInvoice(payload) {
 }
 
 export function processPaymentWebhook(payload) {
-  const parsed = webhookSchema.safeParse(payload);
-  if (!parsed.success) {
-    throw new ApiError(400, 'Invalid payment webhook payload', parsed.error.flatten());
-  }
+  const data = requireObject(payload, 'payment webhook payload');
+  const providerEventId = validate.nonEmptyString(data.providerEventId, 'providerEventId', 4);
+  const memberId = validate.nonEmptyString(data.memberId, 'memberId');
+  const status = validate.enumValue(data.status, 'status', ['succeeded', 'failed']);
+  const amount = validate.positiveNumber(data.amount, 'amount');
 
-  if (store.webhookEvents.has(parsed.data.providerEventId)) {
+  if (store.webhookEvents.has(providerEventId)) {
     return { duplicated: true };
   }
 
-  const member = store.members.find((entry) => entry.id === parsed.data.memberId);
+  const member = store.members.find((entry) => entry.id === memberId);
   assertFound(member, 'Member not found');
 
-  if (parsed.data.status === 'succeeded') {
-    member.debt = Math.max(member.debt - parsed.data.amount, 0);
+  if (status === 'succeeded') {
+    member.debt = Math.max(member.debt - amount, 0);
   }
 
-  store.webhookEvents.add(parsed.data.providerEventId);
+  store.webhookEvents.add(providerEventId);
 
   return {
     duplicated: false,
     memberId: member.id,
     debt: member.debt,
-    status: parsed.data.status
+    status
   };
 }
 
