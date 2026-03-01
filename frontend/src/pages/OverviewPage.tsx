@@ -1,10 +1,20 @@
 import { KpiCard } from "../components/KpiCard";
 import { SectionTitle } from "../components/SectionTitle";
-import { accessFeed, billingAlerts, bookings, kpis } from "../data/mockData";
+import { accessFeed, billingAlerts, bookings, kpis, systemPrinciples, workflows } from "../data/mockData";
 
 export function OverviewPage() {
   return (
     <main className="content">
+      <section className="card status-banner">
+        <div>
+          <p className="status-banner-label">Operational posture</p>
+          <h3>Professional-grade gym platform, engineered for scale and reliability</h3>
+        </div>
+        <button type="button" className="primary">
+          Run Readiness Check
+        </button>
+      </section>
+
       <section className="kpi-grid">
         {kpis.map((kpi) => (
           <KpiCard key={kpi.label} {...kpi} />
@@ -13,8 +23,20 @@ export function OverviewPage() {
 
       <section className="card">
         <SectionTitle
+          title="Core System Principles"
+          subtitle="Architecture and product standards embedded into day-to-day operations"
+        />
+        <ul className="principles-list">
+          {systemPrinciples.map((principle) => (
+            <li key={principle}>{principle}</li>
+          ))}
+        </ul>
+      </section>
+
+      <section className="card">
+        <SectionTitle
           title="Class Booking Pressure"
-          subtitle="Hold/confirm utilization and waitlist behavior"
+          subtitle="Hold/confirm utilization, waitlist behavior, and release recommendations"
           action={<button type="button">Release Extra Slot</button>}
         />
         <table>
@@ -41,6 +63,16 @@ export function OverviewPage() {
         </table>
       </section>
 
+      <section className="workflow-grid">
+        {workflows.map((workflow) => (
+          <article className="card" key={workflow.title}>
+            <h3>{workflow.title}</h3>
+            <p>{workflow.description}</p>
+            <span className="pill">{workflow.maturity}</span>
+          </article>
+        ))}
+      </section>
+
       <section className="split-layout">
         <article className="card">
           <SectionTitle title="Access Events" subtitle="Latest turnstile authorization decisions" />
@@ -60,7 +92,7 @@ export function OverviewPage() {
         </article>
 
         <article className="card">
-          <SectionTitle title="Billing Attention" subtitle="Webhook retries and subscription risk" />
+          <SectionTitle title="Billing Attention" subtitle="Webhook retries, debt risk, and required interventions" />
           <ul className="alert-list">
             {billingAlerts.map((alert) => (
               <li key={alert}>{alert}</li>

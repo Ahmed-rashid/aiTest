@@ -1,7 +1,36 @@
 :root {
   font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-  background: #f3f5fb;
-  color: #0f172a;
+  color-scheme: light;
+  --bg: #eff3fb;
+  --surface: #ffffff;
+  --surface-muted: #f8fafc;
+  --text: #0f172a;
+  --text-muted: #64748b;
+  --border: #dbe3ef;
+  --brand: #2563eb;
+  --brand-strong: #1d4ed8;
+  --success-bg: #dcfce7;
+  --success-text: #166534;
+  --danger-bg: #fee2e2;
+  --danger-text: #991b1b;
+  --shadow: 0 12px 26px rgba(15, 23, 42, 0.08);
+}
+
+body.dark-mode {
+  color-scheme: dark;
+  --bg: #030712;
+  --surface: #0f172a;
+  --surface-muted: #111c32;
+  --text: #e2e8f0;
+  --text-muted: #94a3b8;
+  --border: #253149;
+  --brand: #60a5fa;
+  --brand-strong: #3b82f6;
+  --success-bg: #052e1f;
+  --success-text: #4ade80;
+  --danger-bg: #3b0a12;
+  --danger-text: #f87171;
+  --shadow: 0 12px 30px rgba(2, 6, 23, 0.45);
 }
 
 * {
@@ -10,21 +39,24 @@
 
 body {
   margin: 0;
+  background: var(--bg);
+  color: var(--text);
 }
 
 .app-shell {
   min-height: 100vh;
   display: grid;
-  grid-template-columns: 250px 1fr;
+  grid-template-columns: 270px 1fr;
 }
 
 .sidebar {
-  background: #101828;
+  background: linear-gradient(180deg, #101828 0%, #0b1223 100%);
   color: #f8fafc;
   padding: 1.25rem;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  justify-content: space-between;
+  gap: 1.2rem;
 }
 
 .sidebar h1 {
@@ -32,17 +64,32 @@ body {
 }
 
 .tenant-pill {
-  margin: 0;
+  margin: 0.5rem 0 0;
   font-size: 0.8rem;
-  background: #1e293b;
+  background: rgba(148, 163, 184, 0.18);
   padding: 0.4rem 0.6rem;
   border-radius: 999px;
+  display: inline-block;
 }
 
 nav {
   display: flex;
   flex-direction: column;
-  gap: 0.4rem;
+  gap: 0.9rem;
+}
+
+.nav-group-label {
+  margin: 0 0 0.35rem;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #93c5fd;
+}
+
+.nav-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
 }
 
 .nav-item {
@@ -57,7 +104,25 @@ nav {
 
 .nav-item:hover,
 .nav-item.active {
-  background: #1e293b;
+  background: rgba(30, 41, 59, 0.8);
+}
+
+.sidebar-footer {
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  border-radius: 12px;
+  padding: 0.75rem;
+}
+
+.sidebar-footer p,
+.sidebar-footer strong {
+  margin: 0;
+  display: block;
+}
+
+.sidebar-footer p {
+  font-size: 0.78rem;
+  color: #cbd5e1;
+  margin-bottom: 0.3rem;
 }
 
 .main-shell {
@@ -71,10 +136,11 @@ nav {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: #ffffff;
-  border-radius: 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
   padding: 1rem 1.2rem;
-  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.05);
+  box-shadow: var(--shadow);
 }
 
 .topbar h2,
@@ -83,33 +149,59 @@ nav {
 }
 
 .topbar p {
-  color: #64748b;
+  color: var(--text-muted);
   margin-top: 0.2rem;
 }
 
 .topbar-actions {
   display: flex;
+  flex-wrap: wrap;
   gap: 0.6rem;
 }
 
 button {
-  border: 1px solid #cbd5e1;
-  background: #ffffff;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
   border-radius: 8px;
   padding: 0.5rem 0.8rem;
   cursor: pointer;
 }
 
 button.primary {
-  background: #2563eb;
+  background: var(--brand);
   color: #ffffff;
-  border: 1px solid #1d4ed8;
+  border: 1px solid var(--brand-strong);
 }
 
 .content {
   display: flex;
   flex-direction: column;
   gap: 1rem;
+}
+
+.status-banner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid var(--border);
+}
+
+.status-banner h3,
+.status-banner-label {
+  margin: 0;
+}
+
+.status-banner h3 {
+  margin-top: 0.3rem;
+  font-size: 1.1rem;
+}
+
+.status-banner-label {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
 }
 
 .kpi-grid {
@@ -119,14 +211,15 @@ button.primary {
 }
 
 .card {
-  background: #ffffff;
-  border-radius: 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
   padding: 1rem;
-  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.05);
+  box-shadow: var(--shadow);
 }
 
 .card-label {
-  color: #64748b;
+  color: var(--text-muted);
   margin: 0;
   font-size: 0.9rem;
 }
@@ -163,8 +256,15 @@ button.primary {
 }
 
 .section-title p {
-  color: #64748b;
+  color: var(--text-muted);
   margin-top: 0.2rem;
+}
+
+.principles-list {
+  margin: 0;
+  padding-left: 1.1rem;
+  display: grid;
+  gap: 0.5rem;
 }
 
 table {
@@ -176,7 +276,33 @@ th,
 td {
   text-align: left;
   padding: 0.6rem;
-  border-bottom: 1px solid #e2e8f0;
+  border-bottom: 1px solid var(--border);
+}
+
+.workflow-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.workflow-grid h3,
+.workflow-grid p {
+  margin: 0;
+}
+
+.workflow-grid p {
+  color: var(--text-muted);
+  margin: 0.35rem 0 0.8rem;
+}
+
+.pill {
+  font-size: 0.75rem;
+  font-weight: 700;
+  background: rgba(37, 99, 235, 0.14);
+  color: var(--brand);
+  border-radius: 999px;
+  padding: 0.26rem 0.55rem;
+  display: inline-flex;
 }
 
 .split-layout {
@@ -197,12 +323,12 @@ td {
   justify-content: space-between;
   align-items: center;
   padding: 0.7rem 0;
-  border-bottom: 1px solid #e2e8f0;
+  border-bottom: 1px solid var(--border);
 }
 
 .feed-list p {
   margin: 0.2rem 0 0;
-  color: #64748b;
+  color: var(--text-muted);
 }
 
 .status {
@@ -213,18 +339,25 @@ td {
 }
 
 .status.ok {
-  background: #dcfce7;
-  color: #166534;
+  background: var(--success-bg);
+  color: var(--success-text);
 }
 
 .status.deny {
-  background: #fee2e2;
-  color: #991b1b;
+  background: var(--danger-bg);
+  color: var(--danger-text);
 }
 
 .alert-list li {
   padding: 0.6rem 0;
-  border-bottom: 1px solid #e2e8f0;
+  border-bottom: 1px solid var(--border);
+}
+
+@media (max-width: 1200px) {
+  .kpi-grid,
+  .workflow-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 @media (max-width: 1000px) {
@@ -237,11 +370,13 @@ td {
   }
 
   .kpi-grid,
+  .workflow-grid,
   .split-layout {
     grid-template-columns: 1fr;
   }
 
-  .topbar {
+  .topbar,
+  .status-banner {
     flex-direction: column;
     align-items: start;
     gap: 0.8rem;
