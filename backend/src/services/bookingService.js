@@ -1,18 +1,6 @@
-import { z } from 'zod';
 import { store } from '../data/store.js';
 import { ApiError, assertFound } from '../utils/errors.js';
-
-const createClassSchema = z.object({
-  className: z.string().min(2),
-  instructor: z.string().min(2),
-  startsAt: z.string().datetime(),
-  capacity: z.number().int().positive().max(100)
-});
-
-const bookingSchema = z.object({
-  memberId: z.string().min(1),
-  classId: z.string().min(1)
-});
+import { requireObject, validate } from '../utils/validation.js';
 
 export function listClasses() {
   return store.classes.map((session) => {
@@ -29,14 +17,18 @@ export function listClasses() {
 }
 
 export function createClass(payload) {
-  const parsed = createClassSchema.safeParse(payload);
-  if (!parsed.success) {
-    throw new ApiError(400, 'Invalid class payload', parsed.error.flatten());
-  }
+  const data = requireObject(payload, 'class payload');
+  const className = validate.nonEmptyString(data.className, 'className', 2);
+  const instructor = validate.nonEmptyString(data.instructor, 'instructor', 2);
+  const startsAt = validate.isoDateTimeString(data.startsAt, 'startsAt');
+  const capacity = validate.positiveIntInRange(data.capacity, 'capacity', 100);
 
   const gymClass = {
     id: store.createId('class'),
-    ...parsed.data
+    className,
+    instructor,
+    startsAt,
+    capacity
   };
 
   store.classes.push(gymClass);
@@ -44,19 +36,18 @@ export function createClass(payload) {
 }
 
 export function createBooking(payload) {
-  const parsed = bookingSchema.safeParse(payload);
-  if (!parsed.success) {
-    throw new ApiError(400, 'Invalid booking payload', parsed.error.flatten());
-  }
+  const data = requireObject(payload, 'booking payload');
+  const memberId = validate.nonEmptyString(data.memberId, 'memberId');
+  const classId = validate.nonEmptyString(data.classId, 'classId');
 
-  const member = store.members.find((entry) => entry.id === parsed.data.memberId);
+  const member = store.members.find((entry) => entry.id === memberId);
   assertFound(member, 'Member not found');
 
   if (member.status !== 'active') {
     throw new ApiError(403, 'Inactive member cannot book classes');
   }
 
-  const gymClass = store.classes.find((entry) => entry.id === parsed.data.classId);
+  const gymClass = store.classes.find((entry) => entry.id === classId);
   assertFound(gymClass, 'Class not found');
 
   if (store.bookings.some((entry) => entry.memberId === member.id && entry.classId === gymClass.id)) {
