@@ -27,6 +27,26 @@ Target non-functional goals:
 
 ---
 
+## 1.1 Product and Engineering Principles
+
+The platform must be operated as a **professional-grade system of record** for clubs with high operational pressure. To maintain implementation quality, the following principles are mandatory:
+
+1. **Operational clarity first**: front-desk workflows (members, packages, check-ins, daily expenses, reservations) must be one-click accessible with keyboard-friendly shortcuts and context-aware actions.
+2. **Dark mode and accessibility by default**: every core screen supports light/dark themes, WCAG-aligned contrast, scalable typography, and reduced cognitive load.
+3. **Policy-driven governance**: all sensitive actions (member edits, pricing changes, refunds, deletions) require auditable role checks and immutable event trails.
+4. **Resilient money movement**: billing, debt collection, receipts, and reconciliations are idempotent, traceable, and replay-safe under webhook retries.
+5. **Actionable analytics**: reporting surfaces must move beyond static exports to proactive insights, anomaly detection, and SLA-oriented operational alerts.
+6. **Enterprise UX standards**: consistent design system tokens, clear information hierarchy, and status-driven color semantics across modules.
+
+## 1.2 Legacy Workflow Parity and Modernization
+
+To support gyms migrating from legacy desktop software, the SaaS product should preserve familiar concepts while modernizing execution:
+
+- **Members & Packages parity**: searchable member registry, package lifecycle actions (new, renew, pause, resume), and debt visibility in a unified workspace.
+- **Program menu parity**: direct access to members, packages, daily expenses, reservations, and work-time with richer role-based controls.
+- **Tools and reports parity**: maintain operational reports (sales by package, payment method, trainer, member debt) while introducing drill-downs and scheduled delivery.
+- **Modernized interaction model**: replace modal-heavy flows with guided panels, command actions, and real-time feedback for front-desk speed.
+
 ## 2. System Topology
 
 ```mermaid

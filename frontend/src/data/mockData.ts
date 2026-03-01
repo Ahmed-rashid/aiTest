@@ -1,8 +1,8 @@
 export const kpis = [
-  { label: "Active Members", value: "2,184", change: "+3.2%" },
-  { label: "Today's Check-ins", value: "426", change: "+8.1%" },
-  { label: "MRR", value: "$96,420", change: "+4.7%" },
-  { label: "Pending Invoices", value: "17", change: "-2.4%" }
+  { label: "Active Members", value: "3,284", change: "+6.4%" },
+  { label: "Today's Check-ins", value: "612", change: "+11.2%" },
+  { label: "MRR", value: "$146,420", change: "+8.1%" },
+  { label: "Collection Rate", value: "97.2%", change: "+1.9%" }
 ];
 
 export const bookings = [
@@ -22,5 +22,37 @@ export const accessFeed = [
 export const billingAlerts = [
   "12 subscriptions are due for renewal in the next 24 hours.",
   "3 payment webhooks are in retry queue.",
-  "1 invoice failed due to card expiration."
+  "1 invoice failed due to card expiration.",
+  "2 chargebacks pending evidence submission."
+];
+
+export const workflows = [
+  {
+    title: "Member Lifecycle",
+    description: "Onboarding, profile governance, contract lifecycle, and consent management.",
+    maturity: "Enterprise ready"
+  },
+  {
+    title: "Packages & Billing",
+    description: "Tiered packages, recurring invoices, debt recovery, and payment reconciliations.",
+    maturity: "Automated"
+  },
+  {
+    title: "Front-Desk Operations",
+    description: "Fast check-ins, access denials routing, and smart queue handling.",
+    maturity: "Low latency"
+  },
+  {
+    title: "Reporting & Compliance",
+    description: "Audit logs, role-scoped exports, and operational SLA dashboards.",
+    maturity: "Policy driven"
+  }
+];
+
+export const systemPrinciples = [
+  "Security-first multi-tenant architecture with least-privilege defaults.",
+  "Event-driven reliability using idempotent workflows and replay-safe processing.",
+  "Operational excellence through observability, SLOs, and actionable alerts.",
+  "Product ergonomics: keyboard-friendly UX, role-aware navigation, and dark mode.",
+  "Continuous improvement via analytics-ready data model and experimentation hooks."
 ];
